@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
@@ -30,6 +32,9 @@ class RNWebView extends WebView implements LifecycleEventListener {
     private String injectedJavaScript = null;
     private boolean allowUrlRedirect = false;
     private boolean openLinkExternally = true;
+    private ViewTreeObserver treeObserver;
+    private boolean loading = true;
+    private int contentHeight = 0;
 
     protected class EventWebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url){
@@ -52,7 +57,8 @@ class RNWebView extends WebView implements LifecycleEventListener {
         }
 
         public void onPageFinished(WebView view, String url) {
-            mEventDispatcher.dispatchEvent(new NavigationStateChangeEvent(getId(), SystemClock.uptimeMillis(), view.getTitle(), false, url, view.canGoBack(), view.canGoForward()));
+            RNWebView.this.loading = false;
+            RNWebView.this.notifyJSNavigationState();
 
             if(RNWebView.this.getInjectedJavaScript() != null) {
                 view.loadUrl("javascript:(function() {\n" + RNWebView.this.getInjectedJavaScript() + ";\n})();");
@@ -60,7 +66,8 @@ class RNWebView extends WebView implements LifecycleEventListener {
         }
 
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            mEventDispatcher.dispatchEvent(new NavigationStateChangeEvent(getId(), SystemClock.uptimeMillis(), view.getTitle(), true, url, view.canGoBack(), view.canGoForward()));
+            RNWebView.this.loading = true;
+            RNWebView.this.notifyJSNavigationState();
         }
     }
 
@@ -115,6 +122,27 @@ class RNWebView extends WebView implements LifecycleEventListener {
 
         this.setWebViewClient(new EventWebClient());
         this.setWebChromeClient(getCustomClient());
+        // Trick to get the HTML content height and notify Javascript side
+        treeObserver = this.getViewTreeObserver();
+        treeObserver.addOnPreDrawListener(new OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                int height = RNWebView.this.getContentHeight();
+                if (height > contentHeight) {
+                    contentHeight = height;
+                    notifyJSNavigationState();
+                }
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Send a notification message to Javascript
+     */
+    public void notifyJSNavigationState() {
+        mEventDispatcher.dispatchEvent(new NavigationStateChangeEvent(getId(), SystemClock.uptimeMillis(),
+            getTitle(), loading, getUrl(), canGoBack(), canGoForward(), contentHeight));
     }
 
     public void setCharset(String charset) {
