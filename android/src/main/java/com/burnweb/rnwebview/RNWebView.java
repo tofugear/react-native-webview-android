@@ -1,6 +1,7 @@
 package com.burnweb.rnwebview;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 
 import android.net.Uri;
 import android.os.SystemClock;
@@ -28,9 +29,17 @@ class RNWebView extends WebView implements LifecycleEventListener {
     private String baseUrl = "file:///";
     private String injectedJavaScript = null;
     private boolean allowUrlRedirect = false;
+    private boolean openLinkExternally = true;
 
     protected class EventWebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url){
+            if (RNWebView.this.getOpenLinkExternally()) {
+                // Open link in external browser
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                view.getContext().startActivity(intent);
+                return true;
+            }
             if(RNWebView.this.getAllowUrlRedirect()) {
                 // do your handling codes here, which url is the requested url
                 // probably you need to open that url rather than redirect:
@@ -114,6 +123,14 @@ class RNWebView extends WebView implements LifecycleEventListener {
 
     public String getCharset() {
         return this.charset;
+    }
+
+    public void setOpenLinkExternally(boolean openLinkExternally) {
+        this.openLinkExternally = openLinkExternally;
+    }
+
+    public boolean getOpenLinkExternally() {
+        return this.openLinkExternally;
     }
 
     public void setAllowUrlRedirect(boolean a) {

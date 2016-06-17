@@ -55,6 +55,11 @@ public class RNWebViewManager extends SimpleViewManager<RNWebView> {
         return this.aPackage;
     }
 
+    @ReactProp(name = "openLinkExternally", defaultBoolean = true)
+    public void setOpenLinkExternally(RNWebView view, boolean openLinkExternally) {
+        view.setOpenLinkExternally(openLinkExternally);
+    }
+
     @ReactProp(name = "allowUrlRedirect", defaultBoolean = false)
     public void setAllowUrlRedirect(RNWebView view, boolean allowUrlRedirect) {
         view.setAllowUrlRedirect(allowUrlRedirect);

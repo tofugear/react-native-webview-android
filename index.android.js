@@ -28,6 +28,7 @@ var WebViewAndroid = React.createClass({
     javaScriptEnabled: React.PropTypes.bool,
     geolocationEnabled: React.PropTypes.bool,
     allowUrlRedirect: React.PropTypes.bool,
+    openLinkExternally: React.PropTypes.bool,
     builtInZoomControls: React.PropTypes.bool,
     onNavigationStateChange: React.PropTypes.func
   },
