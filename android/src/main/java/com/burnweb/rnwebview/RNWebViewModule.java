@@ -166,4 +166,8 @@ public class RNWebViewModule extends ReactContextBaseJavaModule implements Activ
             mUploadMessageArr = null;
         }
     }
+
+    // Required for RN 0.30+ modules than implement ActivityEventListener
+    @Override
+    public void onNewIntent(Intent intent) {}
 }
