@@ -5,7 +5,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.Event;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 
-/* package */ class NavigationStateChangeEvent extends Event<NavigationStateChangeEvent> {
+public class NavigationStateChangeEvent extends Event<NavigationStateChangeEvent> {
 
     public static final String EVENT_NAME = "navigationStateChange";
 
@@ -22,7 +22,7 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
             String url,
             boolean canGoBack, boolean canGoForward,
             int contentHeight) {
-        super(viewTag, timestampMs);
+        super(viewId);
 
         mTitle = title;
         mIsLoading = isLoading;

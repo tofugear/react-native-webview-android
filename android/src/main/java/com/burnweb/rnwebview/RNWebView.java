@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 
 import android.net.Uri;
-import android.os.SystemClock;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.ViewTreeObserver;
@@ -17,6 +16,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.facebook.react.common.SystemClock;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
