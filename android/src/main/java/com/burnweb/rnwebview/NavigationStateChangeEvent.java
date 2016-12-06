@@ -22,7 +22,7 @@ public class NavigationStateChangeEvent extends Event<NavigationStateChangeEvent
             String url,
             boolean canGoBack, boolean canGoForward,
             int contentHeight) {
-        super(viewId);
+        super(viewTag);
 
         mTitle = title;
         mIsLoading = isLoading;
