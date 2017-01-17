@@ -2,7 +2,9 @@ package com.burnweb.rnwebview;
 
 import javax.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.view.ViewGroup.LayoutParams;
@@ -174,6 +176,15 @@ public class RNWebViewManager extends SimpleViewManager<RNWebView> {
         view.setInjectedJavaScript(injectedJavaScript);
     }
 
+    @ReactProp(name = "filterURLPatterns")
+    public void setFilterURLPatterns(RNWebView view, ReadableArray urls) {
+        List<String> list = new ArrayList();
+        for (int i = 0; i < urls.size(); ++i) {
+            list.add(urls.getString(i));
+        }
+        view.setFilterURLPatterns(list);
+    }
+
     @Override
     public @Nullable Map<String, Integer> getCommandsMap() {
         return MapBuilder.of(
@@ -201,7 +212,10 @@ public class RNWebViewManager extends SimpleViewManager<RNWebView> {
     @Override
     public Map getExportedCustomDirectEventTypeConstants() {
         return MapBuilder.of(
-                NavigationStateChangeEvent.EVENT_NAME, MapBuilder.of("registrationName", "onNavigationStateChange")
+                NavigationStateChangeEvent.EVENT_NAME,
+                MapBuilder.of("registrationName", "onNavigationStateChange"),
+                URLFilteredEvent.EVENT_NAME,
+                MapBuilder.of("registrationName", "onURLFiltered")
         );
     }
 

@@ -103,6 +103,9 @@ var WebViewAndroidExample = React.createClass({
         loading: event.loading
       });
     },
+    onURLFiltered: function(event) {
+      // Do something with event.url
+    },
     render: function() {
       return (
         <WebViewAndroid
@@ -111,6 +114,8 @@ var WebViewAndroidExample = React.createClass({
           geolocationEnabled={false}
           builtInZoomControls={false}
           onNavigationStateChange={this.onNavigationStateChange}
+          filterURLPatterns={["ab-\d+"]} // The Java Regex Pattern
+          onURLFiltered={this.onURLFiltered}
           url={SITE_URL} // or use the source(object) attribute...
           style={styles.containerWebView} />
       );

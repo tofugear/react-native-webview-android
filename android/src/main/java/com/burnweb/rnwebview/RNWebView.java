@@ -22,6 +22,9 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.events.EventDispatcher;
 
+import java.util.regex.Pattern;
+import java.util.List;
+
 class RNWebView extends WebView implements LifecycleEventListener {
 
     private final EventDispatcher mEventDispatcher;
@@ -35,9 +38,20 @@ class RNWebView extends WebView implements LifecycleEventListener {
     private ViewTreeObserver treeObserver;
     private boolean loading = true;
     private int contentHeight = 0;
+    private List<String> filterURLPatterns = null;
 
     protected class EventWebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url){
+            if (filterURLPatterns != null && filterURLPatterns.size() > 0) {
+                // Stop navigating to the URL if filter pattern matches
+                for (String filterPattern: filterURLPatterns) {
+                    if (Pattern.matches(filterPattern, url)) {
+                        // Notify JS side
+                        mEventDispatcher.dispatchEvent(new URLFilteredEvent(getId(), url));
+                        return true;
+                    }
+                }
+            }
             if (RNWebView.this.getOpenLinkExternally()) {
                 // Open link in external browser
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -183,6 +197,14 @@ class RNWebView extends WebView implements LifecycleEventListener {
 
     public String getBaseUrl() {
         return this.baseUrl;
+    }
+
+    public void setFilterURLPatterns(List<String> urls) {
+        this.filterURLPatterns = urls;
+    }
+
+    public List<String> getFilterURLPatterns() {
+        return this.filterURLPatterns;
     }
 
     public CustomWebChromeClient getCustomClient() {

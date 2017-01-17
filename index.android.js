@@ -31,12 +31,19 @@ var WebViewAndroid = React.createClass({
     geolocationEnabled: React.PropTypes.bool,
     allowUrlRedirect: React.PropTypes.bool,
     openLinkExternally: React.PropTypes.bool,
+    filterURLPatterns: React.PropTypes.array,
     builtInZoomControls: React.PropTypes.bool,
-    onNavigationStateChange: React.PropTypes.func
+    onNavigationStateChange: React.PropTypes.func,
+    onURLFiltered: React.PropTypes.func
   },
   _onNavigationStateChange: function(event) {
     if (this.props.onNavigationStateChange) {
       this.props.onNavigationStateChange(event.nativeEvent);
+    }
+  },
+ _onURLFiltered: function(event) {
+    if (this.props.onURLFiltered) {
+      this.props.onURLFiltered(event.nativeEvent);
     }
   },
   goBack: function() {
@@ -61,7 +68,7 @@ var WebViewAndroid = React.createClass({
     );
   },
   render: function() {
-    return <RNWebViewAndroid ref={WEBVIEW_REF} {...this.props} onNavigationStateChange={this._onNavigationStateChange} />;
+    return <RNWebViewAndroid ref={WEBVIEW_REF} {...this.props} onNavigationStateChange={this._onNavigationStateChange} onURLFiltered={this._onURLFiltered} />;
   },
   _getWebViewHandle: function() {
     return RN.findNodeHandle(this.refs[WEBVIEW_REF]);
