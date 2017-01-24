@@ -39,6 +39,7 @@ class RNWebView extends WebView implements LifecycleEventListener {
     private boolean loading = true;
     private int contentHeight = 0;
     private List<String> filterURLPatterns = null;
+    private boolean firstLoadFinished = false;  // Prevent redirect being pop-up before first page loaded
 
     protected class EventWebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url){
@@ -52,8 +53,8 @@ class RNWebView extends WebView implements LifecycleEventListener {
                     }
                 }
             }
-            if (RNWebView.this.getOpenLinkExternally()) {
-                // Open link in external browser
+            if (firstLoadFinished && RNWebView.this.getOpenLinkExternally()) {
+                // Open link in external browser only for non-redirect URL
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
                 view.getContext().startActivity(intent);
@@ -71,6 +72,7 @@ class RNWebView extends WebView implements LifecycleEventListener {
         }
 
         public void onPageFinished(WebView view, String url) {
+            RNWebView.this.firstLoadFinished = true;
             RNWebView.this.loading = false;
             RNWebView.this.notifyJSNavigationState();
 
@@ -133,7 +135,6 @@ class RNWebView extends WebView implements LifecycleEventListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-
         this.setWebViewClient(new EventWebClient());
         this.setWebChromeClient(getCustomClient());
         // Trick to get the HTML content height and notify Javascript side
