@@ -65,16 +65,25 @@ public class RNWebViewManager extends SimpleViewManager<RNWebView> {
 
     @ReactProp(name = "openLinkExternally", defaultBoolean = true)
     public void setOpenLinkExternally(RNWebView view, boolean openLinkExternally) {
+        if (view == null)
+            return;
+
         view.setOpenLinkExternally(openLinkExternally);
     }
 
     @ReactProp(name = "allowUrlRedirect", defaultBoolean = false)
     public void setAllowUrlRedirect(RNWebView view, boolean allowUrlRedirect) {
+        if (view == null)
+            return;
+
         view.setAllowUrlRedirect(allowUrlRedirect);
     }
 
     @ReactProp(name = "disableCookies", defaultBoolean = false)
     public void setDisableCookies(RNWebView view, boolean disableCookies) {
+        if (view == null)
+            return;
+
         if(disableCookies) {
             CookieManager.getInstance().setAcceptCookie(false);
             CookieManager.getInstance().setAcceptFileSchemeCookies(false);
@@ -86,6 +95,9 @@ public class RNWebViewManager extends SimpleViewManager<RNWebView> {
 
     @ReactProp(name = "disablePlugins", defaultBoolean = false)
     public void setDisablePlugins(RNWebView view, boolean disablePlugins) {
+        if (view == null)
+            return;
+
         if(disablePlugins) {
             view.getSettings().setPluginState(WebSettings.PluginState.OFF);
         } else {
@@ -95,11 +107,17 @@ public class RNWebViewManager extends SimpleViewManager<RNWebView> {
 
     @ReactProp(name = "builtInZoomControls", defaultBoolean = false)
     public void setBuiltInZoomControls(RNWebView view, boolean builtInZoomControls) {
+        if (view == null)
+            return;
+
         view.getSettings().setBuiltInZoomControls(builtInZoomControls);
     }
 
     @ReactProp(name = "geolocationEnabled", defaultBoolean = false)
     public void setGeolocationEnabled(RNWebView view, boolean geolocationEnabled) {
+        if (view == null)
+            return;
+
         view.getSettings().setGeolocationEnabled(geolocationEnabled);
 
         if(geolocationEnabled) {
@@ -112,21 +130,33 @@ public class RNWebViewManager extends SimpleViewManager<RNWebView> {
 
     @ReactProp(name = "javaScriptEnabled", defaultBoolean = true)
     public void setJavaScriptEnabled(RNWebView view, boolean javaScriptEnabled) {
+        if (view == null)
+            return;
+
         view.getSettings().setJavaScriptEnabled(javaScriptEnabled);
     }
 
     @ReactProp(name = "userAgent")
     public void setUserAgent(RNWebView view, @Nullable String userAgent) {
+        if (view == null)
+            return;
+
         if(userAgent != null) view.getSettings().setUserAgentString(userAgent);
     }
 
     @ReactProp(name = "url")
     public void setUrl(RNWebView view, @Nullable String url) {
+        if (view == null)
+            return;
+
         view.loadUrl(url, headerMap);
     }
 
     @ReactProp(name = "headers")
     public void setHeaders(RNWebView view, @Nullable ReadableMap headers) {
+        if (view == null)
+            return;
+
         headerMap = new HashMap<>();
 
         ReadableMapKeySetIterator iter = headers.keySetIterator();
@@ -138,6 +168,9 @@ public class RNWebViewManager extends SimpleViewManager<RNWebView> {
 
     @ReactProp(name = "source")
     public void setSource(RNWebView view, @Nullable ReadableMap source) {
+        if (view == null)
+            return;
+
         if (source != null) {
             if (source.hasKey("baseUrl")) {
                 setBaseUrl(view, source.getString("baseUrl"));
@@ -158,26 +191,41 @@ public class RNWebViewManager extends SimpleViewManager<RNWebView> {
 
     @ReactProp(name = "baseUrl")
     public void setBaseUrl(RNWebView view, @Nullable String baseUrl) {
+        if (view == null)
+            return;
+
         view.setBaseUrl(baseUrl);
     }
 
     @ReactProp(name = "htmlCharset")
     public void setHtmlCharset(RNWebView view, @Nullable String htmlCharset) {
+        if (view == null)
+            return;
+
         if(htmlCharset != null) view.setCharset(htmlCharset);
     }
 
     @ReactProp(name = "html")
     public void setHtml(RNWebView view, @Nullable String html) {
+        if (view == null)
+            return;
+
         view.loadDataWithBaseURL(view.getBaseUrl(), html, HTML_MIME_TYPE, view.getCharset(), null);
     }
 
     @ReactProp(name = "injectedJavaScript")
     public void setInjectedJavaScript(RNWebView view, @Nullable String injectedJavaScript) {
+        if (view == null)
+            return;
+
         view.setInjectedJavaScript(injectedJavaScript);
     }
 
     @ReactProp(name = "filterURLPatterns")
     public void setFilterURLPatterns(RNWebView view, ReadableArray urls) {
+        if (view == null)
+            return;
+
         List<String> list = new ArrayList();
         for (int i = 0; i < urls.size(); ++i) {
             list.add(urls.getString(i));
